@@ -1,0 +1,31 @@
+<launch>
+    <!-- YDLidar G2 node -->
+    <node name="ydlidar_node"  pkg="ydlidar_ros_driver" type="ydlidar_ros_driver_node" output="screen">
+        <param name="port"         type="string" value="/dev/ydlidar"/>
+        <param name="frame_id"     type="string" value="laser_frame"/>
+        <param name="baudrate"     type="int"    value="230400"/>
+        <param name="lidar_type"   type="int"    value="1"/>
+        <param name="angle_min"    type="double" value="-180" />
+        <param name="angle_max"    type="double" value="180" />
+        <param name="range_min"    type="double" value="0.1" />
+        <param name="range_max"    type="double" value="12.0"/>
+        <param name="frequency"    type="double" value="10.0"/>
+    </node>
+<!-- IMU node -->
+    <node name="mpu6050_node" pkg="autonomous_robot" type="imu_node.py" output="screen">
+    </node>
+
+    <!-- Lidar processor node -->
+    <node name="lidar_processor" pkg="autonomous_robot" type="lidar_processor.py" output="screen">
+    </node>
+
+    <!-- Robot navigator node -->
+    <node name="robot_navigator" pkg="autonomous_robot" type="robot_navigator.py" output="screen">
+    </node>
+
+    <!-- Static transforms -->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_laser" 
+        args="0 0 0.1 0 0 0 base_link laser_frame" />
+    <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_imu" 
+        args="0 0 0.05 0 0 0 base_link imu_link" />
+</launch>
